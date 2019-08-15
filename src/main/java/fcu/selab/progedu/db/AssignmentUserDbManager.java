@@ -4,17 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class AssignmentUser {
-  private static AssignmentUser dbManager = new AssignmentUser();
+public class AssignmentUserDbManager {
+  private static AssignmentUserDbManager dbManager = new AssignmentUserDbManager();
 
-  public static AssignmentUser getInstance() {
+  public static AssignmentUserDbManager getInstance() {
     return dbManager;
   }
 
   private IDatabase database = new MySqlDatabase();
 
-  private AssignmentUser() {
+  private AssignmentUserDbManager() {
 
   }
 
@@ -56,48 +58,73 @@ public class AssignmentUser {
   }
 
   /**
-   * get aId by AssignmentUser Id
+   * get auId by assignment Id and user Id
    * 
-   * @param id AssignmentUser Id
-   * @return aId assignment Id
+   * @param aid Assignment Id
+   * @param uid User Id
+   * @return auId assignmentUser Id
    */
-  public int getAid(int id) {
-    int aid = 0;
-    String sql = "SELECT * FROM Assignment_User WHERE id=?";
+  public int getAUId(int aid, int uid) {
+    int auid = 0;
+    String sql = "SELECT id FROM Assignment_User WHERE aId=? AND uId=?";
     try (Connection conn = database.getConnection();
         PreparedStatement preStmt = conn.prepareStatement(sql)) {
-      preStmt.setInt(1, id);
+      preStmt.setInt(1, aid);
+      preStmt.setInt(2, uid);
       try (ResultSet rs = preStmt.executeQuery()) {
         while (rs.next()) {
-          aid = rs.getInt("aId");
+          auid = rs.getInt("id");
         }
       }
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    return aid;
+    return auid;
   }
 
   /**
-   * get aId by AssignmentUser Id
+   * get aId by User Id
    * 
-   * @param id AssignmentUser Id
-   * @return aId assignment Id
+   * @return aids assignment Id
    */
-  public int getUid(int id) {
-    int uid = 0;
-    String sql = "SELECT * FROM Assignment_User WHERE id=?";
+  public List<Integer> getAIds(int uId) {
+    List<Integer> lsAids = new ArrayList<>();
+    String sql = "SELECT * FROM Assignment_User WHERE uId = ?";
     try (Connection conn = database.getConnection();
         PreparedStatement preStmt = conn.prepareStatement(sql)) {
-      preStmt.setInt(1, id);
+      preStmt.setInt(1, uId);
       try (ResultSet rs = preStmt.executeQuery()) {
         while (rs.next()) {
-          uid = rs.getInt("uId");
+          int aid = rs.getInt("aId");
+          lsAids.add(aid);
         }
       }
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    return uid;
+    return lsAids;
+  }
+
+  /**
+   * get aId by Assignment Id
+   *
+   * @return aids assignment Id
+   */
+  public List<Integer> getUids(int aId) {
+    List<Integer> lsUids = new ArrayList<>();
+    String sql = "SELECT * FROM Assignment_User WHERE aId = ?";
+    try (Connection conn = database.getConnection();
+        PreparedStatement preStmt = conn.prepareStatement(sql)) {
+      preStmt.setInt(1, aId);
+      try (ResultSet rs = preStmt.executeQuery()) {
+        while (rs.next()) {
+          int uid = rs.getInt("uId");
+          lsUids.add(uid);
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return lsUids;
   }
 }

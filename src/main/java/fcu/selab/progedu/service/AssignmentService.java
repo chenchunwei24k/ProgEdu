@@ -314,7 +314,7 @@ public class AssignmentService {
   @Produces(MediaType.APPLICATION_JSON)
   public Response deleteProject(@FormDataParam("del_Hw_Name") String name) {
     Linux linuxApi = new Linux();
-    CommitRecordService commitRecordService = CommitRecordService.getInstance();
+    CommitRecordService commitRecordService = new CommitRecordService();
     // delete tomcat test file
     String removeTestDirectoryCommand = "rm -rf tests/" + name;
     linuxApi.execLinuxCommandInFile(removeTestDirectoryCommand, tempDir);
