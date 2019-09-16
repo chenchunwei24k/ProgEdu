@@ -363,7 +363,7 @@ public class AssignmentService {
       String tempFilePath = uploadDir + assignmentName;
       String testCasePath = testDir + assignmentName;
       String testCaseZipPath = testCasePath + ".zip";
-      // remove current test case
+      // remove current test case45
       tomcatService.removeFile(testCaseZipPath);
       tomcatService.storeFileToUploadsFolder(file, assignmentName);
 
