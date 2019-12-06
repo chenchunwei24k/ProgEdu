@@ -30,9 +30,10 @@ public class WebUnitTestFailure implements Status {
       int consoleEnd = consoleText.indexOf("failing");
       String unitTestInfo = consoleText.substring(consoleStart, consoleEnd);
       int nextRow = unitTestInfo.indexOf("\n");
+      String fileName = unitTestInfo.substring(2, nextRow).trim();
       int endIndex = consoleEnd - consoleStart;
       unitTestInfo = unitTestInfo.substring(nextRow + 1, endIndex);
-      endIndex = endIndex - nextRow - 1;
+      endIndex = unitTestInfo.length();
       ArrayList<FeedBack> feedbacklist = new ArrayList<>();
       while (unitTestInfo.contains(")")) {
         int nextparentheses = unitTestInfo.indexOf(")");
@@ -44,6 +45,7 @@ public class WebUnitTestFailure implements Status {
           int netspace = unitTestInfo.indexOf("\n", nextparentheses + 1);
           feedbacklist.add(new FeedBack(
               StatusEnum.UNIT_TEST_FAILURE,
+              fileName,
               "",
               unitTestInfo.substring(nextparentheses + 2, netspace),
               "",
@@ -56,7 +58,7 @@ public class WebUnitTestFailure implements Status {
     } catch (Exception e) {
       ArrayList<FeedBack> feedbacklist = new ArrayList<>();
       feedbacklist.add(
-          new FeedBack(StatusEnum.UNIT_TEST_FAILURE, "",
+          new FeedBack(StatusEnum.UNIT_TEST_FAILURE, "", "",
               "UnitTest ArrayList error", "", ""));
       return feedbacklist;
     }
