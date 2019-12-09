@@ -26,12 +26,12 @@ public class WebUnitTestFailure implements Status {
   @Override
   public ArrayList<FeedBack> formatExamineMsg(String consoleText) {
     try {
-      int consoleStart = consoleText.indexOf("測試");
-      int consoleEnd = consoleText.indexOf("failing");
+      int consoleStart = consoleText.indexOf("--timeout");
+      int consoleEnd = consoleText.indexOf("passing");
       String unitTestInfo = consoleText.substring(consoleStart, consoleEnd);
       int nextRow = unitTestInfo.indexOf("\n");
-      String fileName = unitTestInfo.substring(2, nextRow).trim();
-      int endIndex = consoleEnd - consoleStart;
+      unitTestInfo = unitTestInfo.substring(nextRow + 1, unitTestInfo.length()).trim();
+      int endIndex = unitTestInfo.length();
       unitTestInfo = unitTestInfo.substring(nextRow + 1, endIndex);
       endIndex = unitTestInfo.length();
       ArrayList<FeedBack> feedbacklist = new ArrayList<>();
@@ -45,7 +45,7 @@ public class WebUnitTestFailure implements Status {
           int netspace = unitTestInfo.indexOf("\n", nextparentheses + 1);
           feedbacklist.add(new FeedBack(
               StatusEnum.UNIT_TEST_FAILURE,
-              fileName,
+              "",
               "",
               unitTestInfo.substring(nextparentheses + 2, netspace),
               "",
