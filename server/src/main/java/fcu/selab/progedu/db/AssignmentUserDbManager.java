@@ -33,13 +33,14 @@ public class AssignmentUserDbManager {
    * @param aid Assignment Id
    * @param uid User Id
    */
-  public void addAssignmentUser(int aid, int uid) {
-    String sql = "INSERT INTO Assignment_User(aId, uId)  VALUES(?, ?)";
+  public void addAssignmentUser(int aid, int uid, int gid) {
+    String sql = "INSERT INTO Assignment_User(aId, uId, gitLabId)  VALUES(?, ?, ?)";
 
     try (Connection conn = database.getConnection();
         PreparedStatement preStmt = conn.prepareStatement(sql)) {
       preStmt.setInt(1, aid);
       preStmt.setInt(2, uid);
+      preStmt.setInt(3, gid);
       preStmt.executeUpdate();
     } catch (SQLException e) {
       LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));

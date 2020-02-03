@@ -274,11 +274,11 @@ public class AssignmentService {
    * @param username       username
    * @param assignmentName assignment name
    */
-  public void addAuid(String username, String assignmentName) {
+  public void addAuid(String username, String assignmentName, int gitLabId) {
     int aid = dbManager.getAssignmentIdByName(assignmentName);
     int uid = userDbManager.getUserIdByUsername(username);
 
-    auDbManager.addAssignmentUser(aid, uid);
+    auDbManager.addAssignmentUser(aid, uid, gitLabId);
   }
 
   /**
@@ -466,11 +466,11 @@ public class AssignmentService {
     ProjectTypeEnum assignmentTypeEnum = dbManager.getAssignmentType(assignmentName);
     AssignmentType assignment = AssignmentFactory
         .getAssignmentType(assignmentTypeEnum.getTypeName());
-    addAuid(username, assignmentName);
     try {
       int gitLabId = userDbManager.getGitLabIdByUsername(username);
       GitlabProject project = gitlabService.createPrivateProject(gitLabId, assignmentName,
           rootProjectUrl);
+      addAuid(username, assignmentName, project.getId());
       gitlabService.setGitlabWebhook(project);
       assignment.createJenkinsJob(username, assignmentName);
     } catch (IOException | LoadConfigFailureException e) {
