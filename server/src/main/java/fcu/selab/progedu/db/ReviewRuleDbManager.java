@@ -26,4 +26,34 @@ public class ReviewRuleDbManager {
   private ReviewRuleDbManager() {
 
   }
+
+  /**
+   * Get Review_Rule Id by description
+   *
+   * @param description description
+   * @return Id Review_Rule Id
+   */
+  public int getRevRuleId(String description) {
+    return 0;
+  }
+
+  /**
+   * Get Review_Rule description by id
+   *
+   * @param id Review_Rule Id
+   * @return description
+   */
+  public String getRevRuleDesc(int id) {
+    return "";
+  }
+
+  /**
+   * Get Review_Rule all descriptions
+   *
+   */
+  public List<String> getRevRuleAllDesc() {
+    List<String> lsDesc = new ArrayList<>();
+    return lsDesc;
+  }
+
 }
