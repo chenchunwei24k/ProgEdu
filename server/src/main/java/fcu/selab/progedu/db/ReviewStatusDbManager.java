@@ -10,6 +10,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fcu.selab.progedu.service.ReviewStatusEnum;
 import fcu.selab.progedu.utils.ExceptionUtil;
 
 public class ReviewStatusDbManager {
@@ -26,4 +27,27 @@ public class ReviewStatusDbManager {
   private ReviewStatusDbManager() {
 
   }
+
+  /**
+   * Get Review_Status Id by status
+   *
+   * @param status status
+   * @return id status Id
+   */
+  public int getRevStatusId(String status) {
+    return 0;
+  }
+
+  /**
+   * Get Review_Status status by Id
+   *
+   * @param statusId Id
+   * @return ReviewStatusEnum ReviewStatusEnum
+   */
+  public ReviewStatusEnum getRevStatusName(int statusId) {
+    String statusName = null;
+    ReviewStatusEnum statusEnum = ReviewStatusEnum.getStatus(statusName);
+    return statusEnum;
+  }
+
 }
