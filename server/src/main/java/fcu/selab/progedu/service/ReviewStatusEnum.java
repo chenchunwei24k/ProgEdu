@@ -14,7 +14,7 @@ public enum ReviewStatusEnum {
    * @param status is RecordStatus String
    * @return status is getStatusTypeEnum object
    */
-  public static ReviewStatusEnum getStatus(String status) {
+  public static ReviewStatusEnum getStatusEnum(String status) {
     for (ReviewStatusEnum statusType : ReviewStatusEnum.values()) {
       if (statusType.getTypeName().equals(status)) {
         return statusType;

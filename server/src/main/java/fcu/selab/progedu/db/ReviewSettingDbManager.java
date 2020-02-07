@@ -35,38 +35,37 @@ public class ReviewSettingDbManager {
    * 
    * @param assignment Project
    */
-   public void addRevSetting(Assignment assignment) {
+  public void addRevSetting(Assignment assignment) {
 
-   }
+  }
 
   /**
    * Get Review_Setting Id by Assignment Id
    *
-   * @param aId Assignment Id
+   * @param aid Assignment Id
    * @return Id Review_Setting Id
    */
-   public int getRevSettingId(int aId) {
-     return 0;
-   }
+  public int getRevSettingId(int aid) {
+    return 0;
+  }
 
   /**
    * Get Review_Setting amount by Assignment Id
    *
-   * @param aId Assignment Id
+   * @param aid Assignment Id
    * @return amount Review_Setting amount
    */
-   public int getRevSettingAmount(int aId) {
-     return 0;
-   }
+  public int getRevSettingAmount(int aid) {
+    return 0;
+  }
 
   /**
    * Delete Review_Setting from database
    * 
-   * @param aId assignment id
+   * @param aid assignment id
    */
-   public void deleteRevSetting(int aId) {
-
-   }
+  public void deleteRevSetting(int aid) {
+  }
 
   /**
    * Edit Review_Setting
@@ -76,7 +75,6 @@ public class ReviewSettingDbManager {
    * @param endTime     endTime
    * @param id          id
    */
-   public void editRevSetting(int amount, Date startTime, Date endTime, int id) {
-
-   }
+  public void editRevSetting(int amount, Date startTime, Date endTime, int id) {
+  }
 }

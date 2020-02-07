@@ -74,7 +74,7 @@ public class ReviewStatusDbManager {
       LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
       LOGGER.error(e.getMessage());
     }
-    ReviewStatusEnum statusEnum = ReviewStatusEnum.getStatus(statusName);
+    ReviewStatusEnum statusEnum = ReviewStatusEnum.getStatusEnum(statusName);
     return statusEnum;
   }
 
