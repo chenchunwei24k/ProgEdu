@@ -40,7 +40,22 @@ public class ReviewRecordDbManager {
    * @param feedback      feedback
    */
   public void addRevRecord(int pmId, int ruleId, boolean score, Date time, String feedback) {
-    
+    String sql = "INSERT INTO Review_Record (pmId, rId, score, time, feedback) "
+         + "VALUES(?, ?, ?, ?, ?)";
+    Timestamp date = new Timestamp(time.getTime());
+
+    try (Connection conn = database.getConnection();
+         PreparedStatement preStmt = conn.prepareStatement(sql)) {
+      preStmt.setInt(1, pmId);
+      preStmt.setInt(2, ruleId);
+      preStmt.setBoolean(3, score);
+      preStmt.setTimestamp(4, date);
+      preStmt.setString(5, feedback);
+      preStmt.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
   }
 
   /**
@@ -51,7 +66,28 @@ public class ReviewRecordDbManager {
    * @return score, time and feedback
    */
   public JSONObject getRevRecord(int pmId, int ruleId) {
+    String sql = "SELECT score, time, feedback FROM Review_Record WHERE pmId = ? AND rId = ?";
     JSONObject ob = new JSONObject();
+
+    try (Connection conn = database.getConnection();
+         PreparedStatement preStmt = conn.prepareStatement(sql)) {
+      preStmt.setInt(1, pmId);
+      preStmt.setInt(2, ruleId);
+
+      try (ResultSet rs = preStmt.executeQuery()) {
+        while (rs.next()) {
+          Boolean score = rs.getBoolean("score");
+          Date time = rs.getTimestamp("time");
+          String feedback = rs.getString("feedback");
+          ob.put("score", score);
+          ob.put("time", time);
+          ob.put("feedback", feedback);
+        }
+      }
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
     return ob;
   }
 
@@ -63,7 +99,27 @@ public class ReviewRecordDbManager {
    *          which score by specific student in specific assignment
    */
   public JSONObject getRevRecordList(int pmId) {
+    String sql = "SELECT score, time, feedback FROM Review_Record WHERE pmId = ?";
     JSONObject ob = new JSONObject();
+
+    try (Connection conn = database.getConnection();
+         PreparedStatement preStmt = conn.prepareStatement(sql)) {
+      preStmt.setInt(1, pmId);
+
+      try (ResultSet rs = preStmt.executeQuery()) {
+        while (rs.next()) {
+          Boolean score = rs.getBoolean("score");
+          Date time = rs.getTimestamp("time");
+          String feedback = rs.getString("feedback");
+          ob.put("score", score);
+          ob.put("time", time);
+          ob.put("feedback", feedback);
+        }
+      }
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
     return ob;
   }
 
@@ -73,6 +129,14 @@ public class ReviewRecordDbManager {
    * @param pmId pmId
    */
   public void deleteRevRecord(int pmId) {
-
+    String sql = "DELETE FROM Review_Record WHERE pmId = ?";
+    try (Connection conn = database.getConnection();
+         PreparedStatement preStmt = conn.prepareStatement(sql)) {
+      preStmt.setInt(1, pmId);
+      preStmt.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
   }
 }
