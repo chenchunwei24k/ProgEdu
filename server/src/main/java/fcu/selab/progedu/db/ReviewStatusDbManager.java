@@ -35,7 +35,21 @@ public class ReviewStatusDbManager {
    * @return id status Id
    */
   public int getRevStatusId(String status) {
-    return 0;
+    String sql = "SELECT id FROM Review_Status WHERE status = ?";
+    int statusId = 0;
+    try (Connection conn = database.getConnection();
+        PreparedStatement preStmt = conn.prepareStatement(sql)) {
+      preStmt.setString(1, status);
+      try (ResultSet rs = preStmt.executeQuery();) {
+        while (rs.next()) {
+          statusId = rs.getInt("id");
+        }
+      }
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
+    return statusId;
   }
 
   /**
@@ -45,7 +59,21 @@ public class ReviewStatusDbManager {
    * @return ReviewStatusEnum ReviewStatusEnum
    */
   public ReviewStatusEnum getRevStatusName(int statusId) {
+    String sql = "SELECT status FROM Review_Status WHERE id = ?";
     String statusName = null;
+
+    try (Connection conn = database.getConnection();
+        PreparedStatement preStmt = conn.prepareStatement(sql)) {
+      preStmt.setInt(1, statusId);
+      try (ResultSet rs = preStmt.executeQuery();) {
+        while (rs.next()) {
+          statusName = rs.getString("status");
+        }
+      }
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
     ReviewStatusEnum statusEnum = ReviewStatusEnum.getStatus(statusName);
     return statusEnum;
   }
