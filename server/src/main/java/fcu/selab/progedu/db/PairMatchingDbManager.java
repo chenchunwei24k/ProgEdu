@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fcu.selab.progedu.service.ReviewStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ public class PairMatchingDbManager {
    * @param auId AssignmentUser Id
    * @param reviewId User Id
    */
-  public void addPairMatching(int auId, int reviewId) {
+  public void addPairMatching(int auId, int reviewId, ReviewStatusEnum status) {
 
   }
 
@@ -46,6 +47,38 @@ public class PairMatchingDbManager {
    */
   public int getPmId(int auId, int reviewId) {
     return 0;
+  }
+
+  /**
+   * get status by assignmentUser Id and user Id
+   *
+   * @param auId AssignmentUser Id
+   * @param reviewId User Id
+   * @return status PairMatching status
+   */
+  public int getStatus(int auId, int reviewId) {
+    return 0;
+  }
+
+  /**
+   * get status by PairMatching Id
+   *
+   * @param pmId PairMatching Id
+   * @return status PairMatching status
+   */
+  public int getStatusByPmId(int pmId) {
+    return 0;
+  }
+
+  /**
+   * set pmId by assignmentUser Id and user Id
+   *
+   * @param auId AssignmentUser Id
+   * @param reviewId User Id
+   * @param status Review status
+   */
+  public void setStatus(int auId, int reviewId, ReviewStatusEnum status) {
+
   }
 
   /**
