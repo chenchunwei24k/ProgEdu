@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,13 +34,12 @@ public class ReviewRecordDbManager {
    * insert Review_Record into database
    * 
    * @param pmId          pmId
-   * @param rId           rId
-   * @param status        status
+   * @param ruleId        rId
    * @param score         score  
    * @param time          record time
    * @param feedback      feedback
    */
-  public void addRevRecord(int pmId, int rId, int status, boolean score, Date time, String feedback) {
+  public void addRevRecord(int pmId, int ruleId, boolean score, Date time, String feedback) {
     
   }
 
@@ -47,21 +47,32 @@ public class ReviewRecordDbManager {
    * get Review's Record by pmId and rId
    *
    * @param pmId Pair_Matching Id
-   * @param rId Review_Rule Id
-   * @return score which score by designated 
+   * @param ruleId Review_Rule Id
+   * @return score, time and feedback
    */
-   public boolean getRevRecord(int pmId, int rId) {
-     return false;
-   }
+  public JSONObject getRevRecord(int pmId, int ruleId) {
+    JSONObject ob = new JSONObject();
+    return ob;
+  }
 
   /**
-   * get all Review's Record Lsit by pmId
+   * get all Review's Record Score List by pmId
    *
    * @param pmId Pair_Matching pmId
-   * @return lsRecord list of score which score by designated student in designated assignment
+   * @return lsRecord list of score, time and feedback
+   *          which score by specific student in specific assignment
    */
-   public List<boolean> getRevRecordList(int pmId) {
-     List<boolean> lsRecord = new ArrayList<>();
-     return lsRecord;
-   }  
+  public JSONObject getRevRecordList(int pmId) {
+    JSONObject ob = new JSONObject();
+    return ob;
+  }
+
+  /**
+   * delete Review_Record of specific Pair_Matching Id
+   *
+   * @param pmId pmId
+   */
+  public void deleteRevRecord(int pmId) {
+
+  }
 }
