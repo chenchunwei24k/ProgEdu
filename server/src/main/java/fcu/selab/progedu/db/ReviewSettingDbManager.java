@@ -4,15 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Date;
 import java.sql.Timestamp;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fcu.selab.progedu.data.Assignment;
 import fcu.selab.progedu.utils.ExceptionUtil;
 
 public class ReviewSettingDbManager {
@@ -33,10 +31,28 @@ public class ReviewSettingDbManager {
   /**
    * Add Review_Setting to database
    * 
-   * @param assignment Project
+   * @param aid assignment id
+   * @param amount review count
+   * @param startTime review start time
+   * @param endTime review end time
    */
-  public void addRevSetting(Assignment assignment) {
+  public void addRevSetting(int aid, int amount, Date startTime, Date endTime) {
+    String query = "INSERT INTO Review_Setting (aId, amount, startTime, endTime) "
+        + "VALUES (?, ?, ?, ?)";
+    Timestamp start = new Timestamp(startTime.getTime());
+    Timestamp end = new Timestamp(endTime.getTime());
 
+    try (Connection conn = database.getConnection();
+         PreparedStatement preStmt = conn.prepareStatement(query)) {
+      preStmt.setInt(1, aid);
+      preStmt.setInt(2, amount);
+      preStmt.setTimestamp(3, start);
+      preStmt.setTimestamp(4, end);
+      preStmt.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
   }
 
   /**
@@ -46,7 +62,23 @@ public class ReviewSettingDbManager {
    * @return Id Review_Setting Id
    */
   public int getRevSettingId(int aid) {
-    return 0;
+    String query = "SELECT id FROM Review_Setting WHERE aId = ?";
+    int id = 0;
+
+    try (Connection conn = database.getConnection();
+         PreparedStatement preStmt = conn.prepareStatement(query)) {
+      preStmt.setInt(1, aid);
+
+      try (ResultSet rs = preStmt.executeQuery();) {
+        while (rs.next()) {
+          id = rs.getInt("id");
+        }
+      }
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
+    return id;
   }
 
   /**
@@ -56,7 +88,54 @@ public class ReviewSettingDbManager {
    * @return amount Review_Setting amount
    */
   public int getRevSettingAmount(int aid) {
-    return 0;
+    String query = "SELECT amount FROM Review_Setting WHERE aId = ?";
+    int amount = 0;
+
+    try (Connection conn = database.getConnection();
+         PreparedStatement preStmt = conn.prepareStatement(query)) {
+      preStmt.setInt(1, aid);
+
+      try (ResultSet rs = preStmt.executeQuery();) {
+        while (rs.next()) {
+          amount = rs.getInt("id");
+        }
+      }
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
+    return amount;
+  }
+
+  /**
+   * Get Review_Setting amount by Assignment Id
+   *
+   * @param aid Assignment Id
+   * @return lsSetting list of amount, startTime and endTime in specific assignment
+   */
+  public JSONObject getRevSettingList(int aid) {
+    String sql = "SELECT amount, startTime, endTime FROM Review_Setting WHERE aId = ?";
+    JSONObject ob = new JSONObject();
+
+    try (Connection conn = database.getConnection();
+         PreparedStatement preStmt = conn.prepareStatement(sql)) {
+      preStmt.setInt(1, aid);
+
+      try (ResultSet rs = preStmt.executeQuery()) {
+        while (rs.next()) {
+          int amount = rs.getInt("amount");
+          Date startTime = rs.getTimestamp("startTime");
+          Date endTime = rs.getTimestamp("endTime");
+          ob.put("amount", amount);
+          ob.put("startTime", startTime);
+          ob.put("endTime", endTime);
+        }
+      }
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
+    return ob;
   }
 
   /**
@@ -65,16 +144,61 @@ public class ReviewSettingDbManager {
    * @param aid assignment id
    */
   public void deleteRevSetting(int aid) {
+    String sql = "DELETE FROM Review_Setting WHERE aId = ?";
+
+    try (Connection conn = database.getConnection();
+         PreparedStatement preStmt = conn.prepareStatement(sql)) {
+      preStmt.setInt(1, aid);
+      preStmt.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
   }
 
   /**
    * Edit Review_Setting
-   * 
+   *
+   * @param amount      amount
+   * @param aid     assignment id
+   */
+  public void editRevSettingAmount(int amount, int aid) {
+    String sql = "UPDATE Review_Setting SET amount = ? WHERE aId = ?";
+
+    try (Connection conn = database.getConnection();
+         PreparedStatement preStmt = conn.prepareStatement(sql)) {
+      preStmt.setInt(1, amount);
+      preStmt.setInt(2, aid);
+      preStmt.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
+  }
+
+  /**
+   * Edit Review_Setting
+   *
    * @param amount      amount
    * @param startTime   startTime
    * @param endTime     endTime
-   * @param id          id
+   * @param aid     assignment id
    */
-  public void editRevSetting(int amount, Date startTime, Date endTime, int id) {
+  public void editRevSettingAll(int amount, Date startTime, Date endTime, int aid) {
+    String sql = "UPDATE Review_Setting SET amount = ?, startTime = ?, endTime = ? WHERE aId = ?";
+    Timestamp start = new Timestamp(startTime.getTime());
+    Timestamp end = new Timestamp(endTime.getTime());
+
+    try (Connection conn = database.getConnection();
+         PreparedStatement preStmt = conn.prepareStatement(sql)) {
+      preStmt.setInt(1, amount);
+      preStmt.setTimestamp(2, start);
+      preStmt.setTimestamp(3, end);
+      preStmt.setInt(4, aid);
+      preStmt.executeUpdate();
+    } catch (SQLException e) {
+      LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
+      LOGGER.error(e.getMessage());
+    }
   }
 }
