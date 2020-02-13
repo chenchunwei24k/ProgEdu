@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.sql.Timestamp;
 
+import fcu.selab.progedu.data.ReviewSetting;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,9 +114,9 @@ public class ReviewSettingDbManager {
    * @param aid Assignment Id
    * @return lsSetting list of amount, startTime and endTime in specific assignment
    */
-  public JSONObject getRevSettingList(int aid) {
-    String sql = "SELECT amount, startTime, endTime FROM Review_Setting WHERE aId = ?";
-    JSONObject ob = new JSONObject();
+  public ReviewSetting getRevSettingList(int aid) {
+    String sql = "SELECT id, aId, amount, startTime, endTime FROM Review_Setting WHERE aId = ?";
+    ReviewSetting reviewSetting = new ReviewSetting();
 
     try (Connection conn = database.getConnection();
          PreparedStatement preStmt = conn.prepareStatement(sql)) {
@@ -123,19 +124,18 @@ public class ReviewSettingDbManager {
 
       try (ResultSet rs = preStmt.executeQuery()) {
         while (rs.next()) {
-          int amount = rs.getInt("amount");
-          Date startTime = rs.getTimestamp("startTime");
-          Date endTime = rs.getTimestamp("endTime");
-          ob.put("amount", amount);
-          ob.put("startTime", startTime);
-          ob.put("endTime", endTime);
+          reviewSetting.setId(rs.getInt("id"));
+          reviewSetting.setAid(rs.getInt("aId"));
+          reviewSetting.setAmount(rs.getInt("amount"));
+          reviewSetting.setStartTime(rs.getTimestamp("startTime"));
+          reviewSetting.setEndTime(rs.getTimestamp("endTime"));
         }
       }
     } catch (SQLException e) {
       LOGGER.debug(ExceptionUtil.getErrorInfoFromException(e));
       LOGGER.error(e.getMessage());
     }
-    return ob;
+    return reviewSetting;
   }
 
   /**
