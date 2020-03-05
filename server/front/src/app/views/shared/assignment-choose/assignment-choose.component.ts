@@ -7,7 +7,7 @@ import { AssignmentChoosedService } from './assignment-choose.service';
   selector: 'app-assignment-choose',
   templateUrl: './assignment-choose.component.html'
 })
-export class AssignmentChoosedComponent implements OnInit {
+export class AssignmentChooseComponent implements OnInit {
   username: string;
   assignmentName: string;
 
@@ -54,8 +54,7 @@ export class AssignmentChoosedComponent implements OnInit {
         this.commits.reverse();
 
       }
-
-      if (this.assignment.type === 'WEB') {
+      if (this.isWebOrAndroid()) {
         this.getScreenshotUrls();
       }
     });
@@ -82,6 +81,10 @@ export class AssignmentChoosedComponent implements OnInit {
     this.assignmentService.getFeedback(this.assignmentName, this.username, this.commits.length.toString()).subscribe(
       response => {
         this.feedbacks = response;
+        for (let i in this.feedbacks) {
+          this.feedbacks[i].message.replace('/\n/g', '<br />');
+          console.log(this.feedbacks[i].message);
+        }
       },
       error => {
         console.log(error);
@@ -89,12 +92,18 @@ export class AssignmentChoosedComponent implements OnInit {
     );
   }
 
+  isWebOrAndroid(): Boolean {
+    return this.assignment.type === 'WEB' || this.assignment.type === 'ANDROID';
+  }
+
   updateFeedback(commitNumber: string) {
     this.assignmentService.getFeedback(this.assignmentName, this.username, commitNumber).subscribe(
       response => {
         this.feedbacks = response;
         this.selectedCommitNumber = commitNumber;
-        this.getScreenshotUrls();
+        if (this.isWebOrAndroid()) {
+          this.getScreenshotUrls();
+        }
       },
       error => {
         console.log(error);
